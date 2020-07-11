@@ -1,0 +1,70 @@
+// all informations
+
+SELECT	*
+FROM package	
+INNER JOIN sender ON sender.id = package.fk_sender_id
+INNER JOIN reciever ON reciever.id = package.fk_reciever_id
+INNER JOIN city ON city.zipcode = sender.fk_zipcode
+INNER JOIN employee ON employee.id = package.fk_employee_id
+INNER JOIN dropOffPoint ON dropOffPoint.id = package.fk_dofP_id
+group by package.id
+
+
+// name of the sender and the reciever and the employee of the package, that has been send after 2020-05-01 00:00:00
+
+SELECT package.id, sender.name, reciever.name, employee.name FROM package
+INNER JOIN sender
+ON sender.id = package.fk_sender_id
+INNER JOIN reciever
+ON reciever.id = package.fk_reciever_id
+INNER JOIN employee
+ON employee.id = package.fk_employee_id
+WHERE package.sendTimestamp > '2020-05-01 00:00:00'
+
+
+// name of sender and reciever and the sendTimestamp
+
+SELECT package.id, sender.name, reciever.name, package.sendTimestamp FROM package
+INNER JOIN sender
+ON sender.id = package.fk_sender_id
+INNER JOIN reciever
+ON reciever.id = package.fk_reciever_id
+WHERE package.sendTimestamp > '2020-05-01 00:00:00'
+
+
+// number of packages from sender2 that were send after 2020.04.01
+
+SELECT COUNT(package.id) FROM package
+INNER JOIN sender
+ON sender.id = package.fk_sender_id
+WHERE sender.name = 'sender2' AND package.sendTimestamp > '2020-04-01 00:00:00'
+
+
+// number of packages that sender3 has send to reciever5
+
+SELECT COUNT(package.id) FROM package
+INNER JOIN sender
+ON sender.id = package.fk_sender_id
+INNER JOIN reciever
+On reciever.id = package.fk_reciever_id
+WHERE sender.name = 'sender3' AND reciever.name = 'reciever5'
+
+
+// number of packages that were send from Vienna
+
+SELECT COUNT(package.id) FROM package
+inner JOIN sender
+ON package.fk_sender_id = sender.id
+INNER JOIN city
+ON city.zipcode = sender.fk_zipcode
+WHERE city.name = 'Vienna'
+
+
+//show the packagesID and the pickup time of packages , that were send from zipcode 6020
+
+SELECT package.id, package.pickupTimestamp FROM package
+INNER JOIN sender
+ON sender.id = package.fk_sender_id
+INNER JOIN reciever
+On reciever.id = package.fk_reciever_id
+WHERE sender.fk_zipcode = 6020
